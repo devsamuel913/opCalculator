@@ -1,0 +1,86 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.cal-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calc{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+    padding: 10px;
+    width: 350px;
+    height: 550px;
+    background-color: bisque;
+    border-radius: 5px;
+    
+}
+
+.calc-display{
+    height: 100px;
+    width: 300px;
+    background-color: aliceblue;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.buttons-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    max-width: 300px;
+}
+
+.button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: aqua;
+    padding: 4px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+
+
+.clear-delete{
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    margin: 10px;
+}
+
+.clear{
+    width: 145px;
+    height: 50px;
+    background-color: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+
+
+}
+.delete{
+    width: 145px;
+    height: 50px;
+    background-color: red;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border-radius: 5px;
+
+}
+
