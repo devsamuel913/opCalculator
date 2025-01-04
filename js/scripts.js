@@ -1,90 +1,184 @@
-// Calculator Display Elements
-const upperDisplay = document.querySelector(".upper-disp");
-const lowerDisplay = document.querySelector(".lower-disp");
+//display references
+const lowerDisplay = document.querySelector('.lower-disp');
+const upperDisplay = document.querySelector('.upper-disp');
 
-// Clear and Delete Buttons
-const clearButton = document.querySelector(".clear");
-const deleteButton = document.querySelector(".delete");
+// References for control buttons
+const clearButton = document.querySelector('.clear');
+const deleteButton = document.querySelector('.delete');
 
-// Number Buttons
-const button0 = document.querySelector(".zero");
-const button1 = document.querySelector(".one");
-const button2 = document.querySelector(".two");
-const button3 = document.querySelector(".three");
-const button4 = document.querySelector(".four");
-const button5 = document.querySelector(".five");
-const button6 = document.querySelector(".six");
-const button7 = document.querySelector(".seven");
-const button8 = document.querySelector(".eight");
-const button9 = document.querySelector(".nine");
+// References for number buttons
+const button7 = document.querySelector('.seven');
+const button8 = document.querySelector('.eight');
+const button9 = document.querySelector('.nine');
+const button4 = document.querySelector('.four');
+const button5 = document.querySelector('.five');
+const button6 = document.querySelector('.six');
+const button1 = document.querySelector('.one');
+const button2 = document.querySelector('.two');
+const button3 = document.querySelector('.three');
+const button0 = document.querySelector('.zero');
+const buttonPoint = document.querySelector('.point');
 
-// Special Buttons
-const pointButton = document.querySelector(".point");
-const equalButton = document.querySelector(".equal");
-
-// Operation Buttons
-const divideButton = document.querySelector(".divide");
-const multiplyButton = document.querySelector(".multiply");
-const minusButton = document.querySelector(".minus");
-const plusButton = document.querySelector(".plus");
-
-//sum button 
-plusButton.addEventListener("click", summing);
-function summing(){
-    if(lowerDisplay.textContent != ""){
-        let contentPlus = lowerDisplay.textContent + " + ";
-        lowerDisplay.textContent = contentPlus;
-}}
-
-//sum button 
-minusButton.addEventListener("click", subtracting);
-function subtracting(){
-    if(lowerDisplay.textContent != ""){
-        let contentMinus = lowerDisplay.textContent + " - ";
-        lowerDisplay.textContent = contentMinus;
-}}
-
-//multiply button
-multiplyButton.addEventListener("click", multiplying);
-function multiplying(){
-    if(lowerDisplay.textContent != ""){
-        let contentTimes = lowerDisplay.textContent + " × ";
-        lowerDisplay.textContent = contentTimes;
-}}
-
-//multiply button
-divideButton.addEventListener("click", dividing);
-function dividing(){
-    if(lowerDisplay.textContent != ""){
-        let contentDivided = lowerDisplay.textContent + " ÷ ";
-        lowerDisplay.textContent = contentDivided;
-}}
-
-//point button
-pointButton.addEventListener("click", decimal);
-function decimal(){
-    if(lowerDisplay.textContent != ""){
-        let contentPoint = lowerDisplay.textContent + ".";
-        lowerDisplay.textContent = contentPoint;
-}}
-//equal button
-equalButton.addEventListener("click", () => lowerDisplay.textContent += "=")
-
-//clear button
-clearButton.addEventListener("click", clearDisplay)
-function clearDisplay(){
-    lowerDisplay.textContent = "";}
+// References for operator buttons
+const buttonDivide = document.querySelector('.divide');
+const buttonMultiply = document.querySelector('.multiply');
+const buttonSubtract = document.querySelector('.minus');
+const buttonSum = document.querySelector('.plus');
+const buttonEqual = document.querySelector('.equal');
 
 
-//delete button
-deleteButton.addEventListener("click",deleteItems)
-function deleteItems(){
-    if(lowerDisplay.textContent != ""){
-        lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -1);
+
+
+
+// Equal button
+buttonEqual.addEventListener("click", operate);
+function operate() {
+    const lowerDisplayText = lowerDisplay.textContent;
+
+    // Array of operators to check
+    const operators = [" ÷ ", " + ", " × ", " - "];
+    let operatorCoordinates = null;
+    let operator = null;
+
+    // Find the coordinates of the first occurrence of any operator
+    for (const op of operators) {
+        const startIndex = lowerDisplayText.indexOf(op);
+        if (startIndex !== -1) {
+            operatorCoordinates = {
+                start: startIndex,
+                end: startIndex + op.length
+            };
+            operator = op.trim(); // Save operator without extra spaces
+            break;
+        }
     }
 
+    // If no operator is found, return early
+    if (!operatorCoordinates) {
+        console.error("No operator found in the display text.");
+        return;
+    }
+
+    // Isolate the numbers
+    const numberOne = parseFloat(lowerDisplayText.slice(0, operatorCoordinates.start).trim());
+    const numberTwo = parseFloat(lowerDisplayText.slice(operatorCoordinates.end).trim());
+
+    // Log results for debugging
+    console.log("Number One:", numberOne);
+    console.log("Operator:", operator);
+    console.log("Number Two:", numberTwo);
+
+    // Perform the operation
+    let result;
+    if (operator === '+') {
+        result = numberOne + numberTwo;
+    } else if (operator === '-') {
+        result = numberOne - numberTwo;
+    } else if (operator === '×') {
+        result = numberOne * numberTwo;
+    } else if (operator === '÷') {
+        if (numberTwo === 0) {
+            result = "Error"; // Handle divide by zero
+        } else {
+            result = numberOne / numberTwo;
+        }
+    }
+
+    // Update the calculator display with the result
+    lowerDisplay.textContent = result;
+
+    // Optional: Log the updated display for debugging
+    console.log("Updated Display:", lowerDisplay.textContent);
 }
 
+
+
+
+
+
+
+
+
+//clear button functionality
+clearButton.addEventListener("click", clearDisplays);
+
+function clearDisplays(){
+    if (lowerDisplay.textContent != "" || upperDisplay.textContent != ""){
+        lowerDisplay.textContent = '';
+        upperDisplay.textContent ='';
+    }
+}
+
+//delete button functionality
+deleteButton.addEventListener("click", eraseChars);
+
+function eraseChars() {
+    if (lowerDisplay.textContent !== '') {
+        // Check if the last three characters match " + ", " - ", " ÷ ", or " × "
+        const lastThreeChars = lowerDisplay.textContent.slice(-3);
+        if ([" + ", " - ", " ÷ ", " × "].includes(lastThreeChars)) {
+            // Remove the last three characters
+            lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -3);
+        } else {
+            // Remove only the last character
+            lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -1); } } }
+
+
+
+
+///Operator buttons event listeners//
+// Helper function to check if the last character is an operator
+function endsWithOperator() {
+    const operators = [" ÷ ", " + ", " × ", " - "];
+    return operators.some(op => lowerDisplay.textContent.endsWith(op));
+}
+
+// Divide
+buttonDivide.addEventListener("click", divide);
+function divide() {
+    if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        lowerDisplay.textContent += " ÷ ";
+    }
+}
+
+// Sum
+buttonSum.addEventListener("click", sum);
+function sum() {
+    if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        lowerDisplay.textContent += " + ";
+    }
+}
+
+// Multiply
+buttonMultiply.addEventListener("click", multiply);
+function multiply() {
+    if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        lowerDisplay.textContent += " × ";
+    }
+}
+
+// Subtract
+buttonSubtract.addEventListener("click", subtract);
+function subtract() {
+    if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        lowerDisplay.textContent += " - ";
+    }
+}
+
+// Point
+buttonPoint.addEventListener("click", addingPoint);
+function addingPoint() {
+    if (lowerDisplay.textContent !== '' && !lowerDisplay.textContent.slice(0,-1).includes(".")) {
+        lowerDisplay.textContent += ".";
+    }
+}
+
+
+
+///Number button event listeners//
+
+// Number 0 functionality
+button0.addEventListener("click", () => lowerDisplay.textContent += 0);
 // Number 1 functionality
 button1.addEventListener("click", () => lowerDisplay.textContent += 1);
 
@@ -111,4 +205,3 @@ button8.addEventListener("click", () => lowerDisplay.textContent += 8);
 
 // Number 9 functionality
 button9.addEventListener("click", () => lowerDisplay.textContent += 9);
-
