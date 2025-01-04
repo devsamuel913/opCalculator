@@ -1,4 +1,4 @@
-//display references
+// Display references
 const lowerDisplay = document.querySelector('.lower-disp');
 const upperDisplay = document.querySelector('.upper-disp');
 
@@ -26,14 +26,21 @@ const buttonSubtract = document.querySelector('.minus');
 const buttonSum = document.querySelector('.plus');
 const buttonEqual = document.querySelector('.equal');
 
-
-
-
+// Variable to keep track if an operation has been performed
+let operationInProgress = false;
+let result = null;
+let lastOperator = null;
 
 // Equal button
 buttonEqual.addEventListener("click", operate);
+
 function operate() {
     const lowerDisplayText = lowerDisplay.textContent;
+
+    // If no operator or two operators are found, just return
+    if (!lowerDisplayText.includes(" ")) {
+        return;
+    }
 
     // Array of operators to check
     const operators = [" ÷ ", " + ", " × ", " - "];
@@ -69,7 +76,6 @@ function operate() {
     console.log("Number Two:", numberTwo);
 
     // Perform the operation
-    let result;
     if (operator === '+') {
         result = numberOne + numberTwo;
     } else if (operator === '-') {
@@ -84,32 +90,29 @@ function operate() {
         }
     }
 
+    // Show result on the upper display
+    upperDisplay.textContent = `${numberOne} ${operator} ${numberTwo} = ${result}`;
+
     // Update the calculator display with the result
     lowerDisplay.textContent = result;
 
-    // Optional: Log the updated display for debugging
+    // Mark operation as completed
+    operationInProgress = true;
     console.log("Updated Display:", lowerDisplay.textContent);
 }
 
-
-
-
-
-
-
-
-
-//clear button functionality
+// clear button functionality
 clearButton.addEventListener("click", clearDisplays);
 
-function clearDisplays(){
-    if (lowerDisplay.textContent != "" || upperDisplay.textContent != ""){
+function clearDisplays() {
+    if (lowerDisplay.textContent !== "" || upperDisplay.textContent !== "") {
         lowerDisplay.textContent = '';
-        upperDisplay.textContent ='';
+        upperDisplay.textContent = '';
+        operationInProgress = false;  // Reset operation flag
     }
 }
 
-//delete button functionality
+// delete button functionality
 deleteButton.addEventListener("click", eraseChars);
 
 function eraseChars() {
@@ -121,13 +124,12 @@ function eraseChars() {
             lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -3);
         } else {
             // Remove only the last character
-            lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -1); } } }
+            lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -1);
+        }
+    }
+}
 
-
-
-
-///Operator buttons event listeners//
-// Helper function to check if the last character is an operator
+// Operator buttons event listeners
 function endsWithOperator() {
     const operators = [" ÷ ", " + ", " × ", " - "];
     return operators.some(op => lowerDisplay.textContent.endsWith(op));
@@ -137,7 +139,11 @@ function endsWithOperator() {
 buttonDivide.addEventListener("click", divide);
 function divide() {
     if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        if (operationInProgress) {
+            operate();  // Perform the operation before entering a new operator
+        }
         lowerDisplay.textContent += " ÷ ";
+        operationInProgress = false;  // Reset flag when starting a new operation
     }
 }
 
@@ -145,7 +151,11 @@ function divide() {
 buttonSum.addEventListener("click", sum);
 function sum() {
     if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        if (operationInProgress) {
+            operate();  // Perform the operation before entering a new operator
+        }
         lowerDisplay.textContent += " + ";
+        operationInProgress = false;
     }
 }
 
@@ -153,7 +163,11 @@ function sum() {
 buttonMultiply.addEventListener("click", multiply);
 function multiply() {
     if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        if (operationInProgress) {
+            operate();  // Perform the operation before entering a new operator
+        }
         lowerDisplay.textContent += " × ";
+        operationInProgress = false;
     }
 }
 
@@ -161,47 +175,35 @@ function multiply() {
 buttonSubtract.addEventListener("click", subtract);
 function subtract() {
     if (lowerDisplay.textContent !== '' && !endsWithOperator()) {
+        if (operationInProgress) {
+            operate();  // Perform the operation before entering a new operator
+        }
         lowerDisplay.textContent += " - ";
+        operationInProgress = false;
     }
 }
 
 // Point
 buttonPoint.addEventListener("click", addingPoint);
 function addingPoint() {
-    if (lowerDisplay.textContent !== '' && !lowerDisplay.textContent.slice(0,-1).includes(".")) {
+    // Check if there's no dot already in the last number segment (i.e., between the last operator or start of the input)
+    const currentNumber = lowerDisplay.textContent.split(/[\+\-\×\÷]/).pop();
+    
+    // Only allow adding a dot if the current number doesn't already have one
+    if (currentNumber.indexOf('.') === -1) {
         lowerDisplay.textContent += ".";
     }
 }
 
 
-
-///Number button event listeners//
-
-// Number 0 functionality
+// Number button event listeners
 button0.addEventListener("click", () => lowerDisplay.textContent += 0);
-// Number 1 functionality
 button1.addEventListener("click", () => lowerDisplay.textContent += 1);
-
-// Number 2 functionality
 button2.addEventListener("click", () => lowerDisplay.textContent += 2);
-
-// Number 3 functionality
 button3.addEventListener("click", () => lowerDisplay.textContent += 3);
-
-// Number 4 functionality
 button4.addEventListener("click", () => lowerDisplay.textContent += 4);
-
-// Number 5 functionality
 button5.addEventListener("click", () => lowerDisplay.textContent += 5);
-
-// Number 6 functionality
 button6.addEventListener("click", () => lowerDisplay.textContent += 6);
-
-// Number 7 functionality
 button7.addEventListener("click", () => lowerDisplay.textContent += 7);
-
-// Number 8 functionality
 button8.addEventListener("click", () => lowerDisplay.textContent += 8);
-
-// Number 9 functionality
 button9.addEventListener("click", () => lowerDisplay.textContent += 9);
