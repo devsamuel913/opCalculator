@@ -1,0 +1,7 @@
+log of bugs to fix:
+
+-When you type in things in the following order:
+1.[number1]
+2.[operator]
+3.[random operator]
+you get NaN on the lower display and you get "[number1] × NaN = NaN" on the upper display
