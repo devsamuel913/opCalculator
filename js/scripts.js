@@ -37,7 +37,6 @@ buttonDivide.addEventListener("click", () => performOperation(divideSign));
 // Generalized function to handle operators and calculation
 function performOperation(operator) {
     if (lowerDisplay.textContent !== '') {
-        // Check if the display already has an incomplete operation (e.g., "55.66 - 99.55")
         if (lowerDisplay.textContent.includes(plusSign) || lowerDisplay.textContent.includes(minusSign) ||
             lowerDisplay.textContent.includes(multiplySign) || lowerDisplay.textContent.includes(divideSign)) {
 
@@ -46,22 +45,18 @@ function performOperation(operator) {
             let beforeOperator = lowerDisplay.textContent.slice(0, coords).trim(); // Number before operator
             let afterOperator = lowerDisplay.textContent.slice(coords + lastOperator.length).trim(); // Number after operator
 
-            // If there is no valid number after the operator, replace the operator instead of performing a calculation
             if (afterOperator === '' || isNaN(afterOperator)) {
                 lowerDisplay.textContent = beforeOperator + operator; // Replace the operator
-                return; // Exit early to prevent invalid calculation
+                return;
             } else {
-                // If there's a valid number after the operator, perform the calculation first
-                let numberOne = parseFloat(beforeOperator);
-                let numberTwo = parseFloat(afterOperator);
+                let numberOne = parseFloat(beforeOperator.replace(/,/g, ''));
+                let numberTwo = parseFloat(afterOperator.replace(/,/g, ''));
                 let result = calculate(numberOne, numberTwo, lastOperator);
 
-                // Update displays
-                upperDisplay.textContent = `${numberOne} ${lastOperator} ${numberTwo} = ${result}`;
-                lowerDisplay.textContent = `${result}${operator}`; // Append the operator after the calculation
+                upperDisplay.textContent = `${formatNumber(numberOne)} ${lastOperator} ${formatNumber(numberTwo)} = ${formatNumber(result)}`;
+                lowerDisplay.textContent = `${formatNumber(result)}${operator}`;
             }
         } else {
-            // If no operator exists, just append the new operator
             lowerDisplay.textContent += operator;
         }
     }
@@ -84,7 +79,13 @@ function getOperator(expression) {
     if (expression.includes(minusSign)) return minusSign;
     if (expression.includes(multiplySign)) return multiplySign;
     if (expression.includes(divideSign)) return divideSign;
-    return null; // No operator found
+    return null;
+}
+
+// Helper function to format numbers with commas
+function formatNumber(number) {
+    if (isNaN(number)) return number; // Return non-numeric values as-is (e.g., "Error")
+    return number.toLocaleString('en-US');
 }
 
 // Equal button functionality
@@ -93,14 +94,13 @@ buttonEqual.addEventListener("click", () => {
         let operator = getOperator(lowerDisplay.textContent);
         if (operator) {
             let operatorIndex = lowerDisplay.textContent.indexOf(operator);
-            let numberOne = parseFloat(lowerDisplay.textContent.slice(0, operatorIndex).trim());
-            let numberTwo = parseFloat(lowerDisplay.textContent.slice(operatorIndex + operator.length).trim());
+            let numberOne = parseFloat(lowerDisplay.textContent.slice(0, operatorIndex).trim().replace(/,/g, ''));
+            let numberTwo = parseFloat(lowerDisplay.textContent.slice(operatorIndex + operator.length).trim().replace(/,/g, ''));
 
             let result = calculate(numberOne, numberTwo, operator);
 
-            // Display the result
-            upperDisplay.textContent = `${numberOne} ${operator} ${numberTwo} = ${result}`;
-            lowerDisplay.textContent = result; // Show result on lower display
+            upperDisplay.textContent = `${formatNumber(numberOne)} ${operator} ${formatNumber(numberTwo)} = ${formatNumber(result)}`;
+            lowerDisplay.textContent = formatNumber(result);
         }
     }
 });
@@ -118,10 +118,7 @@ deleteButton.addEventListener("click", () => {
 
 // Point button functionality
 buttonPoint.addEventListener("click", () => {
-    // Prevent adding a period if the last character is already a period
-    // Also prevent adding more than one period in a number
     if (!lowerDisplay.textContent.includes('.') || lowerDisplay.textContent.includes(plusSign) || lowerDisplay.textContent.includes(minusSign) || lowerDisplay.textContent.includes(multiplySign) || lowerDisplay.textContent.includes(divideSign)) {
-        // Check if the current number part (before an operator or at the end) already has a period
         if (!getLastNumber(lowerDisplay.textContent).includes('.')) {
             lowerDisplay.textContent += ".";
         }
@@ -133,7 +130,7 @@ function getLastNumber(expression) {
     let operator = getOperator(expression);
     let numberPart = expression;
     if (operator) {
-        numberPart = expression.split(operator).pop(); // Get part after the operator
+        numberPart = expression.split(operator).pop();
     }
     return numberPart;
 }
@@ -141,6 +138,6 @@ function getLastNumber(expression) {
 // Event listeners for number buttons
 [button0, button1, button2, button3, button4, button5, button6, button7, button8, button9].forEach((button, index) => {
     button.addEventListener("click", () => {
-        lowerDisplay.textContent += index.toString();
+        lowerDisplay.textContent = formatNumber(lowerDisplay.textContent.replace(/,/g, '') + index.toString());
     });
 });
