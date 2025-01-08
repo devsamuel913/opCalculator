@@ -27,6 +27,64 @@ const buttonSum = document.querySelector('.plus');
 const buttonEqual = document.querySelector('.equal');
 
 let divideSign = "÷", plusSign = "+", minusSign = "-", multiplySign = "×";
+// Event listeners for operators
+buttonMultiply.addEventListener("click", multiply);
+function multiply() {
+    performOperation(multiplySign);
+}
+
+buttonSubtract.addEventListener("click", subtract);
+function subtract() {
+    performOperation(minusSign);
+}
+
+buttonSum.addEventListener("click", sum);
+function sum() {
+    performOperation(plusSign);
+}
+
+buttonDivide.addEventListener("click", divide);
+function divide() {
+    performOperation(divideSign);
+}
+
+// Generalized function to handle operators and calculation
+function performOperation(operator) {
+    if (lowerDisplay.textContent !== '') {
+        // Check if the display already has an incomplete operation (e.g., "1 ÷")
+        if (lowerDisplay.textContent.includes(plusSign) || lowerDisplay.textContent.includes(minusSign) ||
+            lowerDisplay.textContent.includes(multiplySign) || lowerDisplay.textContent.includes(divideSign)) {
+
+            let lastOperator = getOperator(lowerDisplay.textContent);
+            let coords = lowerDisplay.textContent.indexOf(lastOperator);
+            let beforeOperator = lowerDisplay.textContent.slice(0, coords).trim(); // Number before operator
+            let afterOperator = lowerDisplay.textContent.slice(coords + lastOperator.length).trim(); // Number after operator
+
+            // If there is no valid number after the operator, replace the operator instead of performing a calculation
+            if (afterOperator === '' || isNaN(afterOperator)) {
+                lowerDisplay.textContent = beforeOperator + operator; // Replace the operator
+                return; // Exit early to prevent invalid calculation
+            } else {
+                // If there's a valid number after the operator, perform the calculation first
+                let numberOne = parseFloat(beforeOperator);
+                let numberTwo = parseFloat(afterOperator);
+                equal(numberOne, numberTwo, lastOperator);
+            }
+        } else {
+            // If no operator exists, just append the new operator
+            lowerDisplay.textContent += operator;
+        }
+    }
+}
+
+// Utility function to get the operator from the display
+function getOperator(display) {
+    if (display.includes(multiplySign)) return multiplySign;
+    if (display.includes(plusSign)) return plusSign;
+    if (display.includes(minusSign)) return minusSign;
+    if (display.includes(divideSign)) return divideSign;
+    return null;
+}
 
 // Equal button functionality
 buttonEqual.addEventListener("click", equal);
@@ -60,54 +118,6 @@ function equal() {
             lowerDisplay.textContent = result;
         }
     }
-}
-
-// Event listeners for operators
-buttonMultiply.addEventListener("click", multiply);
-function multiply() {
-    performOperation(multiplySign);
-}
-
-buttonSubtract.addEventListener("click", subtract);
-function subtract() {
-    performOperation(minusSign);
-}
-
-buttonSum.addEventListener("click", sum);
-function sum() {
-    performOperation(plusSign);
-}
-
-buttonDivide.addEventListener("click", divide);
-function divide() {
-    performOperation(divideSign);
-}
-
-// Generalized function to handle operators and calculation
-function performOperation(operator) {
-    if (lowerDisplay.textContent !== '') {
-        if (lowerDisplay.textContent.includes(plusSign) || lowerDisplay.textContent.includes(minusSign) ||
-            lowerDisplay.textContent.includes(multiplySign) || lowerDisplay.textContent.includes(divideSign)) {
-
-            // If there's already an operator, calculate the previous operation before adding the new operator
-            let lastOperator = getOperator(lowerDisplay.textContent);
-            let coords = lowerDisplay.textContent.indexOf(lastOperator);
-            let firstNumber = parseFloat(lowerDisplay.textContent.slice(0, coords));
-            let secondNumber = parseFloat(lowerDisplay.textContent.slice(coords + lastOperator.length));
-            equal(firstNumber, secondNumber, lastOperator);
-        }
-        // Now, add the new operator after the calculation
-        lowerDisplay.textContent = lowerDisplay.textContent + operator;
-    }
-}
-
-// Utility function to get the operator from the display
-function getOperator(display) {
-    if (display.includes(multiplySign)) return multiplySign;
-    if (display.includes(plusSign)) return plusSign;
-    if (display.includes(minusSign)) return minusSign;
-    if (display.includes(divideSign)) return divideSign;
-    return null;
 }
 
 // Clear button
