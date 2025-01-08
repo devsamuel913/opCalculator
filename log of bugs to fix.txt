@@ -5,3 +5,19 @@ log of bugs to fix:
 2.[operator]
 3.[random operator]
 you get NaN on the lower display and you get "[number1] × NaN = NaN" on the upper display
+
+
+-I dialed in 88[multiplication sign]88[multiplication sign][multiplication sign] and the result of this operation is the following string "88×" which is not correct and what should happen is that first of all I shouldn't need to dial the multiplication sign twice to do an operation, i want to be able to enter a second operator and as soon as I dial it in and it appears on the display the operation before it involving number,operator, number 2 is done and then the result of that operation is display and the second operator is now put next to the result
+
+the text "1÷" was in the display and then I clicked the minus button expecting js to overwrite the dividing sign but instead it threw this "[on the upper display:]1 ÷ NaN = NaN
+[on the lower display:]NaN-". Fix this.
+
+I dialed "55.66 - 99.55" in the display of my calc and then I clicked the multiply button and it did the operation well displaying "55.66 - 99.55 = -43.89" on the upper display and displaying "-43.89" but the multiply button should be there next to "-43.89" in the lower display but it's not, not only that but also when I click the multiply button again throws this on the upper display "NaN - 43.89 = NaN" and this on the lower display "NaN"
+
+-I can tap number but operator buttons don't work
+
+-Uncaught ReferenceError: getOperator is not defined
+    performOperation http://127.0.0.1:5500/js/scripts.js:44
+    <anonymous> http://127.0.0.1:5500/js/scripts.js:35
+    EventListener.handleEvent* http://127.0.0.1:5500/js/scripts.js:35
+scripts.js:44:32

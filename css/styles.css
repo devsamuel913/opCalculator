@@ -1,98 +1,161 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.cal-container{
+body {
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
 }
 
-.calc{
+.cal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.calc {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 30px;
-    padding: 10px;
-    width: 350px;
-    height: 550px;
+    padding: 15px;
+    width: 90%;
+    max-width: 350px;
+    height: auto;
     background-color: bisque;
     border-radius: 5px;
-    
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.calc-display{
+.calc-display {
     height: 100px;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     background-color: aliceblue;
     margin-bottom: 10px;
     margin-top: 20px;
     border-radius: 5px;
-}
-
-.buttons-container{
+    padding: 10px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    width: 300px;
-    max-width: 300px;
 }
 
-.button{
+.upper-disp {
+    width: 100%;
+    height: 30px;
+    padding: 8px;
+}
+
+.lower-disp {
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: 60px;
-    height: 60px;
-    background-color: aqua;
-    padding: 4px;
-    margin: 10px;
-    border-radius: 5px;
+    width: 100%;
+    height: 70px;
+    padding: 8px;
 }
 
-
-
-.clear-delete{
+.clear-delete {
     display: flex;
     justify-content: space-between;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     margin: 10px;
 }
 
-.clear{
-    width: 145px;
+.clear, .delete {
+    width: 48%;
     height: 50px;
     background-color: blue;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-
-
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
 }
-.delete{
-    width: 145px;
-    height: 50px;
+
+.delete {
     background-color: red;
+}
+
+.buttons-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+    margin-top: 10px;
+}
+
+.button {
+    display: flex;
     justify-content: center;
     align-items: center;
-    display: flex;
+    width: 100%;
+    height: 60px;
+    background-color: aqua;
+    padding: 4px;
     border-radius: 5px;
-
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
-.upper-disp{
-    width: 300px;
-    height: 30px;
-    padding: 8px;
+.button:active {
+    transform: scale(0.95);
+    background-color: lightblue;
 }
-.lower-disp{
-    display: flex;
-    align-items: center;
-    width: 300px;
-    height: 70px;
-    padding: 8px;
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calc {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .calc-display {
+        height: 80px;
+    }
+
+    .button {
+        height: 50px;
+        font-size: 1rem;
+    }
+
+    .clear, .delete {
+        height: 45px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .calc {
+        margin: 10px;
+    }
+
+    .calc-display {
+        height: 70px;
+    }
+
+    .button {
+        height: 45px;
+        font-size: 0.9rem;
+    }
+
+    .clear, .delete {
+        height: 40px;
+        font-size: 0.8rem;
+    }
 }
