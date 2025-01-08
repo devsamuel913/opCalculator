@@ -27,31 +27,17 @@ const buttonSum = document.querySelector('.plus');
 const buttonEqual = document.querySelector('.equal');
 
 let divideSign = "÷", plusSign = "+", minusSign = "-", multiplySign = "×";
+
 // Event listeners for operators
-buttonMultiply.addEventListener("click", multiply);
-function multiply() {
-    performOperation(multiplySign);
-}
-
-buttonSubtract.addEventListener("click", subtract);
-function subtract() {
-    performOperation(minusSign);
-}
-
-buttonSum.addEventListener("click", sum);
-function sum() {
-    performOperation(plusSign);
-}
-
-buttonDivide.addEventListener("click", divide);
-function divide() {
-    performOperation(divideSign);
-}
+buttonMultiply.addEventListener("click", () => performOperation(multiplySign));
+buttonSubtract.addEventListener("click", () => performOperation(minusSign));
+buttonSum.addEventListener("click", () => performOperation(plusSign));
+buttonDivide.addEventListener("click", () => performOperation(divideSign));
 
 // Generalized function to handle operators and calculation
 function performOperation(operator) {
     if (lowerDisplay.textContent !== '') {
-        // Check if the display already has an incomplete operation (e.g., "1 ÷")
+        // Check if the display already has an incomplete operation (e.g., "55.66 - 99.55")
         if (lowerDisplay.textContent.includes(plusSign) || lowerDisplay.textContent.includes(minusSign) ||
             lowerDisplay.textContent.includes(multiplySign) || lowerDisplay.textContent.includes(divideSign)) {
 
@@ -68,7 +54,11 @@ function performOperation(operator) {
                 // If there's a valid number after the operator, perform the calculation first
                 let numberOne = parseFloat(beforeOperator);
                 let numberTwo = parseFloat(afterOperator);
-                equal(numberOne, numberTwo, lastOperator);
+                let result = calculate(numberOne, numberTwo, lastOperator);
+
+                // Update displays
+                upperDisplay.textContent = `${numberOne} ${lastOperator} ${numberTwo} = ${result}`;
+                lowerDisplay.textContent = `${result}${operator}`; // Append the operator after the calculation
             }
         } else {
             // If no operator exists, just append the new operator
@@ -77,19 +67,28 @@ function performOperation(operator) {
     }
 }
 
-// Utility function to get the operator from the display
-function getOperator(display) {
-    if (display.includes(multiplySign)) return multiplySign;
-    if (display.includes(plusSign)) return plusSign;
-    if (display.includes(minusSign)) return minusSign;
-    if (display.includes(divideSign)) return divideSign;
-    return null;
+// Calculation logic
+function calculate(numberOne, numberTwo, operator) {
+    switch (operator) {
+        case plusSign: return numberOne + numberTwo;
+        case minusSign: return numberOne - numberTwo;
+        case multiplySign: return numberOne * numberTwo;
+        case divideSign: return numberTwo !== 0 ? numberOne / numberTwo : "Error";
+        default: return null;
+    }
+}
+
+// Helper function to get the operator in the expression
+function getOperator(expression) {
+    if (expression.includes(plusSign)) return plusSign;
+    if (expression.includes(minusSign)) return minusSign;
+    if (expression.includes(multiplySign)) return multiplySign;
+    if (expression.includes(divideSign)) return divideSign;
+    return null; // No operator found
 }
 
 // Equal button functionality
-buttonEqual.addEventListener("click", equal);
-
-function equal() {
+buttonEqual.addEventListener("click", () => {
     if (lowerDisplay.textContent !== '') {
         let operator = getOperator(lowerDisplay.textContent);
         if (operator) {
@@ -97,41 +96,27 @@ function equal() {
             let numberOne = parseFloat(lowerDisplay.textContent.slice(0, operatorIndex).trim());
             let numberTwo = parseFloat(lowerDisplay.textContent.slice(operatorIndex + operator.length).trim());
 
-            let result = null;
-            // Perform the operation based on the operator
-            if (operator === multiplySign) {
-                result = numberOne * numberTwo;
-            } else if (operator === plusSign) {
-                result = numberOne + numberTwo;
-            } else if (operator === minusSign) {
-                result = numberOne - numberTwo;
-            } else if (operator === divideSign) {
-                if (numberTwo === 0) {
-                    result = "Error"; // Handle divide by zero
-                } else {
-                    result = numberOne / numberTwo;
-                }
-            }
+            let result = calculate(numberOne, numberTwo, operator);
 
             // Display the result
             upperDisplay.textContent = `${numberOne} ${operator} ${numberTwo} = ${result}`;
-            lowerDisplay.textContent = result;
+            lowerDisplay.textContent = result; // Show result on lower display
         }
     }
-}
+});
 
-// Clear button
+// Clear button functionality
 clearButton.addEventListener("click", () => {
     lowerDisplay.textContent = '';
     upperDisplay.textContent = '';
 });
 
-// Delete button
+// Delete button functionality
 deleteButton.addEventListener("click", () => {
     lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -1); // Remove last character
 });
 
-// Point button
+// Point button functionality
 buttonPoint.addEventListener("click", () => {
     // Prevent adding a period if the last character is already a period
     // Also prevent adding more than one period in a number
@@ -148,12 +133,12 @@ function getLastNumber(expression) {
     let operator = getOperator(expression);
     let numberPart = expression;
     if (operator) {
-        numberPart = expression.split(operator).pop();  // Get part after the operator
+        numberPart = expression.split(operator).pop(); // Get part after the operator
     }
     return numberPart;
 }
 
-// Event listeners for numbers
+// Event listeners for number buttons
 [button0, button1, button2, button3, button4, button5, button6, button7, button8, button9].forEach((button, index) => {
     button.addEventListener("click", () => {
         lowerDisplay.textContent += index.toString();
