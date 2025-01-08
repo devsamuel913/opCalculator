@@ -92,8 +92,8 @@ body {
 
 .buttons-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr); /* Create 4 columns */
+    gap: 15px; /* Add spacing between grid items */
     width: 100%;
     max-width: 300px;
     margin-top: 10px;
@@ -106,11 +106,11 @@ body {
     width: 100%;
     height: 60px;
     background-color: aqua;
-    padding: 4px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1.2rem;
     font-weight: bold;
+    margin: 5px;
 }
 
 .button:active {
