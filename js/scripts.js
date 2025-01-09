@@ -141,3 +141,45 @@ function getLastNumber(expression) {
         lowerDisplay.textContent = formatNumber(lowerDisplay.textContent.replace(/,/g, '') + index.toString());
     });
 });
+
+// Add event listener for keyboard input
+document.addEventListener("keydown", (event) => {
+    const key = event.key;
+
+    // Check if the key is a number (0-9)
+    if (!isNaN(key)) {
+        lowerDisplay.textContent = formatNumber(lowerDisplay.textContent.replace(/,/g, '') + key);
+    }
+
+    // Check if the key is an operator
+    if (key === "+" || key === "-" || key === "*" || key === "/") {
+        let operator;
+        switch (key) {
+            case "+": operator = plusSign; break;
+            case "-": operator = minusSign; break;
+            case "*": operator = multiplySign; break;
+            case "/": operator = divideSign; break;
+        }
+        performOperation(operator);
+    }
+
+    // Check if the key is Enter (equals) or "="
+    if (key === "Enter" || key === "=") {
+        buttonEqual.click(); // Trigger equal button functionality
+    }
+
+    // Check if the key is Backspace (delete last character)
+    if (key === "Backspace") {
+        deleteButton.click(); // Trigger delete button functionality
+    }
+
+    // Check if the key is "c" or "C" for clear
+    if (key.toLowerCase() === "c") {
+        clearButton.click(); // Trigger clear button functionality
+    }
+
+    // Check if the key is "." (decimal point)
+    if (key === ".") {
+        buttonPoint.click(); // Trigger point button functionality
+    }
+});
